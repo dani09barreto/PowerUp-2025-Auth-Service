@@ -39,4 +39,11 @@ public class UserRepositoryAdapter implements IUserRepository {
         return userReactiveRepository.findAll()
                 .map(UserEntity::toDomain);
     }
+
+    @Override
+    public Mono<User> findByNumberIdentification(String numberIdentification) {
+        return userReactiveRepository.findByNumberIdentification(numberIdentification)
+                .doOnNext(user -> log.info("Found user by identification number: {}", user))
+                .map(UserEntity::toDomain);
+    }
 }

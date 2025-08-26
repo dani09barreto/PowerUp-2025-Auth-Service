@@ -9,4 +9,7 @@ public interface IUserReactiveRepository extends ReactiveCrudRepository<UserEnti
 
     @Query("SELECT * FROM users WHERE email = :email")
     Mono<UserEntity> findByEmail(String email);
+
+    @Query("SELECT * FROM users WHERE identification_number = :numberIdentification")
+    Mono<UserEntity> findByNumberIdentification(String numberIdentification);
 }

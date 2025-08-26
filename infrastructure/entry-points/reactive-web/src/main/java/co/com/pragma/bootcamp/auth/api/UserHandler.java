@@ -4,6 +4,7 @@ import co.com.pragma.bootcamp.auth.api.dto.UserRegistrationRequest;
 import co.com.pragma.bootcamp.auth.api.dto.UserRegistrationResponse;
 import co.com.pragma.bootcamp.auth.api.mapper.UserDtoMapper;
 import co.com.pragma.bootcamp.auth.usecase.registrationuser.IRegistrationUserUseCase;
+import co.com.pragma.bootcamp.auth.usecase.userbyidentification.IUserByIdentificationUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,6 +22,7 @@ import reactor.core.publisher.Mono;
 public class UserHandler {
 
     private final IRegistrationUserUseCase registrationUserUseCase;
+    private final IUserByIdentificationUseCase userByIdentificationUseCase;
 
     @Operation(
             summary = "Registrar un nuevo usuario",
@@ -47,5 +49,34 @@ public class UserHandler {
                 .flatMap(registrationUserUseCase::registerUser)
                 .map(UserDtoMapper::toUserRegistrationResponse)
                 .flatMap(savedUser -> ServerResponse.ok().bodyValue(savedUser));
+    }
+
+    @Operation(
+            summary = "Obtener usuario por número de identificación",
+            description = "Este endpoint permite obtener los detalles de un usuario utilizando su número de identificación.",
+            parameters = {
+                    @io.swagger.v3.oas.annotations.Parameter(
+                            name = "document",
+                            description = "The identification number of the user",
+                            required = true,
+                            in = io.swagger.v3.oas.annotations.enums.ParameterIn.PATH,
+                            example = "123456789"
+                    )
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Usuario encontrado exitosamente",
+                            content = @Content(schema = @Schema(implementation = UserRegistrationResponse.class))
+                    ),
+                    @ApiResponse(responseCode = "404", description = "Error usuario no existe", content = @Content),
+            }
+    )
+    public Mono<ServerResponse> getUserByDocument(ServerRequest serverRequest) {
+        String document = serverRequest.pathVariable("document");
+        log.info("Received request to get user by document: {}", document);
+        return userByIdentificationUseCase.getUserByIdentification(document)
+                .map(UserDtoMapper::toUserRegistrationResponse)
+                .flatMap(user -> ServerResponse.ok().bodyValue(user));
     }
 }
