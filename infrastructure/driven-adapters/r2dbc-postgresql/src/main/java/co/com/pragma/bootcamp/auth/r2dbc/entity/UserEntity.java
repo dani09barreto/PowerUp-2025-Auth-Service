@@ -28,6 +28,8 @@ public class UserEntity {
     private LocalDate birthDate;
     private String address;
     private String phone;
+    @Column("identification_number")
+    private String identificationNumber;
     @Column("email")
     private String email;
     @Column("base_salary")
@@ -40,6 +42,7 @@ public class UserEntity {
                 .lastName(user.getLastName())
                 .birthDate(user.getBirthDate())
                 .address(user.getAddress())
+                .identificationNumber(user.getIdentificationNumber())
                 .phone(user.getPhone())
                 .email(user.getEmail())
                 .baseSalary(user.getBaseSalary())
@@ -54,6 +57,7 @@ public class UserEntity {
                 .lastName(this.lastName)
                 .birthDate(this.birthDate)
                 .address(this.address)
+                .identificationNumber(this.identificationNumber)
                 .phone(this.phone)
                 .email(this.email)
                 .baseSalary(this.baseSalary)

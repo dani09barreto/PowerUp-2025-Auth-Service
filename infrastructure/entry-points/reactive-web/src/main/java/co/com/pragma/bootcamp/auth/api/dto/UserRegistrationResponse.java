@@ -10,6 +10,7 @@ public record UserRegistrationResponse(
     LocalDate birthDate,
     String address,
     String phone,
+    String identificationNumber,
     String email,
     BigDecimal baseSalary
 ) {

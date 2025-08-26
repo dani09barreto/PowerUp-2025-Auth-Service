@@ -9,11 +9,13 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
+@Log4j2
 @Component
 @RequiredArgsConstructor
 public class UserHandler {
@@ -39,11 +41,11 @@ public class UserHandler {
             }
     )
     public Mono<ServerResponse> registerUser(ServerRequest serverRequest) {
+        log.info("Received request to register user");
         return serverRequest.bodyToMono(UserRegistrationRequest.class)
                 .map(UserDtoMapper::toUser)
                 .flatMap(registrationUserUseCase::registerUser)
                 .map(UserDtoMapper::toUserRegistrationResponse)
-                .flatMap(savedUser -> ServerResponse.ok().bodyValue(savedUser))
-                .onErrorResume(e -> ServerResponse.badRequest().bodyValue(e.getMessage()));
+                .flatMap(savedUser -> ServerResponse.ok().bodyValue(savedUser));
     }
 }

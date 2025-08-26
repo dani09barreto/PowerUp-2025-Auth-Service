@@ -12,6 +12,8 @@ public class RegistrationUserUseCase implements IRegistrationUserUseCase{
 
     @Override
     public Mono<User> registerUser(User user) {
+
+        // Validate user fields
         validateUser(user);
 
         return userRepository.existsByEmail(user.getEmail())
@@ -40,8 +42,14 @@ public class RegistrationUserUseCase implements IRegistrationUserUseCase{
         if (user.getPhone() == null || user.getPhone().isEmpty()) {
             throw new IllegalArgumentException("Phone cannot be empty");
         }
+        if (user.getIdentificationNumber() == null || user.getIdentificationNumber().isEmpty()) {
+            throw new IllegalArgumentException("Identification number cannot be empty");
+        }
         if (user.getEmail() == null || user.getEmail().isEmpty()) {
             throw new IllegalArgumentException("Email cannot be empty");
+        }
+        if (user.getBaseSalary() == null || user.getBaseSalary().doubleValue() < 0 || user.getBaseSalary().doubleValue() > 15000000) {
+            throw new IllegalArgumentException("Base salary must be between 0 and 15,000,000");
         }
         if (!user.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$"))
             throw new IllegalArgumentException("Invalid email format");

@@ -9,6 +9,7 @@ public record UserRegistrationRequest(
     LocalDate birthDate,
     String address,
     String phone,
+    String identificationNumber,
     String email,
     BigDecimal baseSalary
 ) {

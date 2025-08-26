@@ -1,5 +1,6 @@
 package co.com.pragma.bootcamp.auth.api;
 
+import co.com.pragma.bootcamp.auth.api.error.ErrorFilter;
 import org.springdoc.core.annotations.RouterOperation;
 import org.springdoc.core.annotations.RouterOperations;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +22,8 @@ public class UserRouterRest {
                     beanMethod = "registerUser"
             )
     })
-    public RouterFunction<ServerResponse> routerFunction(UserHandler handler) {
-        return route(POST("/api/v1/usuarios"), handler::registerUser);
+    public RouterFunction<ServerResponse> routerFunction(UserHandler handler, ErrorFilter errorFilter) {
+        return route(POST("/api/v1/usuarios"), handler::registerUser)
+                .filter(errorFilter);
     }
 }

@@ -15,6 +15,7 @@ public class UserDtoMapper {
             request.address(),
             request.phone(),
             request.email(),
+            request.identificationNumber(),
             request.baseSalary()
         );
     }
@@ -27,6 +28,7 @@ public class UserDtoMapper {
             user.getBirthDate(),
             user.getAddress(),
             user.getPhone(),
+            user.getIdentificationNumber(),
             user.getEmail(),
             user.getBaseSalary()
         );
