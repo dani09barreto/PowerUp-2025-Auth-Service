@@ -2,6 +2,7 @@ package co.com.pragma.bootcamp.auth.api;
 
 import co.com.pragma.bootcamp.auth.api.dto.UserRegistrationRequest;
 import co.com.pragma.bootcamp.auth.api.dto.UserRegistrationResponse;
+import co.com.pragma.bootcamp.auth.api.error.ApiError;
 import co.com.pragma.bootcamp.auth.api.mapper.UserDtoMapper;
 import co.com.pragma.bootcamp.auth.usecase.registrationuser.IRegistrationUserUseCase;
 import co.com.pragma.bootcamp.auth.usecase.userbyidentification.IUserByIdentificationUseCase;
@@ -38,8 +39,12 @@ public class UserHandler {
                             description = "Usuario registrado exitosamente",
                             content = @Content(schema = @Schema(implementation = UserRegistrationResponse.class))
                     ),
-                    @ApiResponse(responseCode = "400", description = "Error de validación en los datos", content = @Content),
-                    @ApiResponse(responseCode = "409", description = "Correo ya registrado", content = @Content)
+                    @ApiResponse(responseCode = "400", description = "Error de validación en los datos",
+                            content = @Content(schema = @Schema(implementation = ApiError.class))
+                    ),
+                    @ApiResponse(responseCode = "409", description = "Correo ya registrado",
+                            content = @Content(schema = @Schema(implementation = ApiError.class))
+                    )
             }
     )
     public Mono<ServerResponse> registerUser(ServerRequest serverRequest) {

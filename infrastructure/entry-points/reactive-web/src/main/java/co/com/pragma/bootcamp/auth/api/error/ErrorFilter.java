@@ -1,5 +1,7 @@
 package co.com.pragma.bootcamp.auth.api.error;
 
+import co.com.pragma.bootcamp.auth.usecase.registrationuser.error.InvalidUserDataException;
+import co.com.pragma.bootcamp.auth.usecase.registrationuser.error.UserAlreadyExistsException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,10 +18,13 @@ public class ErrorFilter implements HandlerFilterFunction<ServerResponse, Server
     @Override
     public Mono<ServerResponse> filter(ServerRequest request, HandlerFunction<ServerResponse> next) {
         return next.handle(request)
-                .onErrorResume(IllegalArgumentException.class,
+                .onErrorResume(InvalidUserDataException.class,
                         ex -> buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request))
+                .onErrorResume(UserAlreadyExistsException.class,
+                        ex -> buildErrorResponse(HttpStatus.CONFLICT, ex.getMessage(), request))
                 .onErrorResume(Exception.class,
                         ex -> buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), request));
+
     }
 
     private Mono<ServerResponse> buildErrorResponse(HttpStatus status, String message, ServerRequest request) {
