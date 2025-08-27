@@ -2,8 +2,8 @@ package co.com.pragma.bootcamp.auth.usecase.registrationuser;
 
 import co.com.pragma.bootcamp.auth.model.user.User;
 import co.com.pragma.bootcamp.auth.model.user.gateways.IUserRepository;
-import co.com.pragma.bootcamp.auth.usecase.registrationuser.error.InvalidUserDataException;
-import co.com.pragma.bootcamp.auth.usecase.registrationuser.error.UserAlreadyExistsException;
+import co.com.pragma.bootcamp.auth.usecase.error.InvalidUserDataException;
+import co.com.pragma.bootcamp.auth.usecase.error.UserAlreadyExistsException;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
