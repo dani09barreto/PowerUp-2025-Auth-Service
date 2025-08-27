@@ -1,7 +1,7 @@
 package co.com.pragma.bootcamp.auth.api.error;
 
-import co.com.pragma.bootcamp.auth.usecase.registrationuser.error.InvalidUserDataException;
-import co.com.pragma.bootcamp.auth.usecase.registrationuser.error.UserAlreadyExistsException;
+import co.com.pragma.bootcamp.auth.usecase.error.InvalidUserDataException;
+import co.com.pragma.bootcamp.auth.usecase.error.UserAlreadyExistsException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
