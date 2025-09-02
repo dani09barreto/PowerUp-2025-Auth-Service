@@ -1,5 +1,6 @@
 package co.com.pragma.bootcamp.auth.api.error;
 
+import co.com.pragma.bootcamp.auth.usecase.error.InvalidUserCredentialsException;
 import co.com.pragma.bootcamp.auth.usecase.error.InvalidUserDataException;
 import co.com.pragma.bootcamp.auth.usecase.error.UserAlreadyExistsException;
 import co.com.pragma.bootcamp.auth.usecase.error.UserNotFoundException;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.*;
 import reactor.core.publisher.Mono;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -21,10 +23,14 @@ public class ErrorFilter implements HandlerFilterFunction<ServerResponse, Server
         return next.handle(request)
                 .onErrorResume(InvalidUserDataException.class,
                         ex -> buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage(), request))
+                .onErrorResume(InvalidUserCredentialsException.class,
+                        ex -> buildErrorResponse(HttpStatus.UNAUTHORIZED, ex.getMessage(), request))
                 .onErrorResume(UserAlreadyExistsException.class,
                         ex -> buildErrorResponse(HttpStatus.CONFLICT, ex.getMessage(), request))
                 .onErrorResume(UserNotFoundException.class,
                         ex -> buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage(), request))
+                .onErrorResume(AccessDeniedException.class,
+                        ex -> buildErrorResponse(HttpStatus.FORBIDDEN, ex.getMessage(), request))
                 .onErrorResume(Exception.class,
                         ex -> buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), request));
 

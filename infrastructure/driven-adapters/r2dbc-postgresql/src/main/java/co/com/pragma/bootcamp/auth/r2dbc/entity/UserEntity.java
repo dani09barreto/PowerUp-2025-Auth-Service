@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table("users")
-public class UserEntity {
+public class UserEntity{
     @Id
     private Long id;
     @Column("first_name")
@@ -34,6 +34,9 @@ public class UserEntity {
     private String email;
     @Column("base_salary")
     private BigDecimal baseSalary;
+    private String password;
+    @Column("role_id")
+    private Long roleId;
 
     public static UserEntity fromDomain(User user) {
         return UserEntity.builder()
@@ -46,6 +49,8 @@ public class UserEntity {
                 .phone(user.getPhone())
                 .email(user.getEmail())
                 .baseSalary(user.getBaseSalary())
+                .password(user.getPassword())
+                .roleId(user.getRole().getId())
                 .build();
     }
 
@@ -61,6 +66,8 @@ public class UserEntity {
                 .phone(this.phone)
                 .email(this.email)
                 .baseSalary(this.baseSalary)
+                .password(this.password)
+                .role(RoleEntity.builder().id(this.roleId).build().toDomain())
                 .build();
     }
 }

@@ -1,4 +1,4 @@
-package co.com.pragma.bootcamp.auth.r2dbc;
+package co.com.pragma.bootcamp.auth.r2dbc.user;
 
 import co.com.pragma.bootcamp.auth.model.user.User;
 import co.com.pragma.bootcamp.auth.model.user.gateways.IUserRepository;
@@ -44,6 +44,13 @@ public class UserRepositoryAdapter implements IUserRepository {
     public Mono<User> findByNumberIdentification(String numberIdentification) {
         return userReactiveRepository.findByNumberIdentification(numberIdentification)
                 .doOnNext(user -> log.info("Found user by identification number: {}", user))
+                .map(UserEntity::toDomain);
+    }
+
+    @Override
+    public Mono<User> findByEmail(String email) {
+        return userReactiveRepository.findByEmail(email)
+                .doOnNext(user -> log.info("Found user by email: {}", user))
                 .map(UserEntity::toDomain);
     }
 }

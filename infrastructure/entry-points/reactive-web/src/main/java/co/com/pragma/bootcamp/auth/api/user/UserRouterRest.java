@@ -1,4 +1,4 @@
-package co.com.pragma.bootcamp.auth.api;
+package co.com.pragma.bootcamp.auth.api.user;
 
 import co.com.pragma.bootcamp.auth.api.error.ErrorFilter;
 import org.springdoc.core.annotations.RouterOperation;
@@ -30,7 +30,7 @@ public class UserRouterRest {
                     beanMethod = "getUserByDocument"
             )
     })
-    public RouterFunction<ServerResponse> routerFunction(UserHandler handler, ErrorFilter errorFilter) {
+    public RouterFunction<ServerResponse> userRouterFunction(UserHandler handler, ErrorFilter errorFilter) {
         return route(POST("/api/v1/usuarios"), handler::registerUser)
                 .andRoute(GET("/api/v1/usuarios/document/{document}"), handler::getUserByDocument)
                 .filter(errorFilter);

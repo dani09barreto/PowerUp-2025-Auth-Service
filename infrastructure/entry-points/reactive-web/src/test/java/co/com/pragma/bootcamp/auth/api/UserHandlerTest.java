@@ -2,8 +2,8 @@ package co.com.pragma.bootcamp.auth.api;
 
 import co.com.pragma.bootcamp.auth.api.dto.UserRegistrationRequest;
 import co.com.pragma.bootcamp.auth.api.dto.UserRegistrationResponse;
-import co.com.pragma.bootcamp.auth.api.error.ApiError;
 import co.com.pragma.bootcamp.auth.api.mapper.UserDtoMapper;
+import co.com.pragma.bootcamp.auth.api.user.UserHandler;
 import co.com.pragma.bootcamp.auth.usecase.registrationuser.IRegistrationUserUseCase;
 import co.com.pragma.bootcamp.auth.usecase.userbyidentification.IUserByIdentificationUseCase;
 import org.junit.jupiter.api.BeforeEach;

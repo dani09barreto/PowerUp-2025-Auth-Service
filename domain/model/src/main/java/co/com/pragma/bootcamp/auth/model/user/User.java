@@ -1,4 +1,5 @@
 package co.com.pragma.bootcamp.auth.model.user;
+import co.com.pragma.bootcamp.auth.model.role.Role;
 import lombok.Builder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,4 +24,6 @@ public class User {
     private String email;
     private String identificationNumber;
     private BigDecimal baseSalary;
+    private String password;
+    private Role role;
 }

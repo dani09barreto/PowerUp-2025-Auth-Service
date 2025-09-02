@@ -11,6 +11,8 @@ public record UserRegistrationRequest(
     String phone,
     String identificationNumber,
     String email,
-    BigDecimal baseSalary
+    BigDecimal baseSalary,
+    String password,
+    String roleName
 ) {
 }
