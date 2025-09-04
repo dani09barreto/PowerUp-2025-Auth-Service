@@ -15,4 +15,10 @@ public class UserByIdentificationUseCase implements IUserByIdentificationUseCase
         return userRepository.findByNumberIdentification(numberIdentification)
                 .switchIfEmpty(Mono.error(new UserNotFoundException("User not found with identification number: " + numberIdentification)));
     }
+
+    @Override
+    public Mono<User> getUserById(Long id) {
+        return userRepository.findById(id)
+                .switchIfEmpty(Mono.error(new UserNotFoundException("User not found with ID: " + id)));
+    }
 }

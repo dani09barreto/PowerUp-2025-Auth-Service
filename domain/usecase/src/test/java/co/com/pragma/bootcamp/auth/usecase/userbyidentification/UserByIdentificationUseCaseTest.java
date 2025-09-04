@@ -11,6 +11,9 @@ import org.mockito.MockitoAnnotations;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
 import static org.mockito.Mockito.*;
 
 class UserByIdentificationUseCaseTest {
@@ -21,9 +24,19 @@ class UserByIdentificationUseCaseTest {
     @InjectMocks
     private UserByIdentificationUseCase userByIdentificationUseCase;
 
+    private User mockUser;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        mockUser = User.builder()
+                .id(1L)
+                .firstName("Daniel")
+                .lastName("Barreto")
+                .email("test@example.com")
+                .birthDate(LocalDate.of(1995, 1, 1))
+                .baseSalary(BigDecimal.valueOf(5000))
+                .build();
     }
 
     @Test
@@ -58,5 +71,28 @@ class UserByIdentificationUseCaseTest {
         user.setIdentificationNumber("123456789");
         user.setEmail("john.doe@example.com");
         return user;
+    }
+
+
+    @Test
+    void getUserById_ShouldReturnUser_WhenUserExists() {
+        when(userRepository.findById(1L)).thenReturn(Mono.just(mockUser));
+
+        StepVerifier.create(userByIdentificationUseCase.getUserById(1L))
+                .expectNextMatches(user -> user.getId().equals(1L) &&
+                        user.getFirstName().equals("Daniel") &&
+                        user.getEmail().equals("test@example.com"))
+                .verifyComplete();
+    }
+
+    @Test
+    void getUserById_ShouldThrowException_WhenUserNotFound() {
+        when(userRepository.findById(99L)).thenReturn(Mono.empty());
+
+        StepVerifier.create(userByIdentificationUseCase.getUserById(99L))
+                .expectErrorMatches(error ->
+                        error instanceof UserNotFoundException &&
+                                error.getMessage().contains("User not found with ID: 99"))
+                .verify();
     }
 }

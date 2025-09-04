@@ -29,10 +29,18 @@ public class UserRouterRest {
                     beanClass = UserHandler.class,
                     beanMethod = "getUserByDocument"
             )
+            ,
+            @RouterOperation(
+                    path = "/api/v1/usuarios/{id}",
+                    method = RequestMethod.GET,
+                    beanClass = UserHandler.class,
+                    beanMethod = "getUserById"
+            )
     })
     public RouterFunction<ServerResponse> userRouterFunction(UserHandler handler, ErrorFilter errorFilter) {
         return route(POST("/api/v1/usuarios"), handler::registerUser)
                 .andRoute(GET("/api/v1/usuarios/document/{document}"), handler::getUserByDocument)
+                .andRoute(GET("/api/v1/usuarios/{id}"), handler::getUserById)
                 .filter(errorFilter);
     }
 }

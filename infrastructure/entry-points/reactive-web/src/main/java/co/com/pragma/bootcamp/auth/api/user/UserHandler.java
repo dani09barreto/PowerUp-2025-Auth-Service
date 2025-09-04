@@ -88,4 +88,34 @@ public class UserHandler {
                 .map(UserDtoMapper::toUserRegistrationResponse)
                 .flatMap(user -> ServerResponse.ok().bodyValue(user));
     }
+
+    @Operation(
+            summary = "Obtener usuario por id",
+            description = "Este endpoint permite obtener el usuario por id.",
+            security = { @SecurityRequirement(name = "bearerAuth") },
+            parameters = {
+                    @io.swagger.v3.oas.annotations.Parameter(
+                            name = "id",
+                            description = "The id of the user",
+                            required = true,
+                            in = io.swagger.v3.oas.annotations.enums.ParameterIn.PATH,
+                            example = "1"
+                    )
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Usuario encontrado exitosamente",
+                            content = @Content(schema = @Schema(implementation = UserRegistrationResponse.class))
+                    ),
+                    @ApiResponse(responseCode = "404", description = "Error usuario no existe", content = @Content),
+            }
+    )
+    public Mono<ServerResponse> getUserById(ServerRequest serverRequest) {
+        Long id = Long.valueOf(serverRequest.pathVariable("id"));
+        log.info("Received request to get user by id: {}", id);
+        return userByIdentificationUseCase.getUserById(id)
+                .map(UserDtoMapper::toUserRegistrationResponse)
+                .flatMap(user -> ServerResponse.ok().bodyValue(user));
+    }
 }

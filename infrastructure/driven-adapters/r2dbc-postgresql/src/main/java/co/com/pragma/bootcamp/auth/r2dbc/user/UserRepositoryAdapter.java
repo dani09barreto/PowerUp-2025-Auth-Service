@@ -53,4 +53,11 @@ public class UserRepositoryAdapter implements IUserRepository {
                 .doOnNext(user -> log.info("Found user by email: {}", user))
                 .map(UserEntity::toDomain);
     }
+
+    @Override
+    public Mono<User> findById(Long id) {
+        return userReactiveRepository.findById(id)
+                .doOnNext(user -> log.info("Found user by id: {}", user))
+                .map(UserEntity::toDomain);
+    }
 }

@@ -91,7 +91,9 @@ class UserHandlerTest {
                 "32322323",
                 "1110001100",
                 "email@example.com",
-                new BigDecimal(1000000)
+                new BigDecimal(1000000),
+                "password123",
+                "ADMIN"
         );
     }
 

@@ -1,5 +1,6 @@
 package co.com.pragma.bootcamp.auth.r2dbc;
 
+import co.com.pragma.bootcamp.auth.model.role.Role;
 import co.com.pragma.bootcamp.auth.model.user.User;
 import co.com.pragma.bootcamp.auth.r2dbc.entity.UserEntity;
 import co.com.pragma.bootcamp.auth.r2dbc.user.IUserReactiveRepository;
@@ -81,6 +82,7 @@ class UserRepositoryAdapterTest {
         user.setAddress("123 Main St");
         user.setPhone("1234567890");
         user.setIdentificationNumber("123456789");
+        user.setRole(Role.builder().id(1L).name("ADMIN").build());
         return user;
     }
 }

@@ -31,6 +31,7 @@ public class MainSecurity {
                                 .pathMatchers("/api/v1/login").permitAll()
                                 .pathMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
                                 .pathMatchers("/api/v1/usuarios/document/{document}").permitAll()
+                                .pathMatchers("/api/v1/usuarios/{id}").permitAll()
                                 .anyExchange().authenticated()
                 )
                 .addFilterAt(jwtFilter, SecurityWebFiltersOrder.FIRST)
