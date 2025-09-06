@@ -1,5 +1,8 @@
 package co.com.pragma.bootcamp.auth.usecase.registrationuser;
 
+import co.com.pragma.bootcamp.auth.model.role.Role;
+import co.com.pragma.bootcamp.auth.model.role.gateways.IRoleRepository;
+import co.com.pragma.bootcamp.auth.model.token.gateways.TokenRepository;
 import co.com.pragma.bootcamp.auth.model.user.User;
 import co.com.pragma.bootcamp.auth.model.user.gateways.IUserRepository;
 import co.com.pragma.bootcamp.auth.usecase.error.InvalidUserDataException;
@@ -23,6 +26,12 @@ class RegistrationUserUseCaseTest {
     @Mock
     private IUserRepository userRepository;
 
+    @Mock
+    private IRoleRepository roleRepository;
+
+    @Mock
+    private TokenRepository tokenRepository;
+
     @InjectMocks
     private RegistrationUserUseCase registrationUserUseCase;
 
@@ -35,6 +44,7 @@ class RegistrationUserUseCaseTest {
     void testRegisterUser_Success() {
         // Arrange
         User user = createValidUser();
+        when(roleRepository.getRoleByName("ADMIN")).thenReturn(Mono.just(Role.builder().name("ADMIN").build()));
         when(userRepository.existsByEmail(user.getEmail())).thenReturn(Mono.just(false));
         when(userRepository.save(user)).thenReturn(Mono.just(user));
 
@@ -51,6 +61,7 @@ class RegistrationUserUseCaseTest {
     void testRegisterUser_EmailAlreadyExists() {
         // Arrange
         User user = createValidUser();
+        when(roleRepository.getRoleByName("ADMIN")).thenReturn(Mono.just(Role.builder().name("ADMIN").build()));
         when(userRepository.existsByEmail(user.getEmail())).thenReturn(Mono.just(true));
 
         // Act & Assert
@@ -111,6 +122,8 @@ class RegistrationUserUseCaseTest {
         user.setPhone("1234567890");
         user.setIdentificationNumber("123456789");
         user.setEmail("john.doe@example.com");
+        user.setPassword("securePassword123");
+        user.setRole(Role.builder().name("ADMIN").build());
         user.setBaseSalary(BigDecimal.valueOf(5000000));
         return user;
     }

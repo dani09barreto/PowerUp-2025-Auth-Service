@@ -1,4 +1,4 @@
-package co.com.pragma.bootcamp.auth.api;
+package co.com.pragma.bootcamp.auth.api.auth;
 
 import co.com.pragma.bootcamp.auth.api.error.ErrorFilter;
 import org.springdoc.core.annotations.RouterOperation;
@@ -14,25 +14,19 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 @Configuration
-public class UserRouterRest {
+public class AuthRouterRest {
 
     @Bean
     @RouterOperations({
             @RouterOperation(
-                    path = "/api/v1/usuarios",
-                    beanClass = UserHandler.class,
-                    beanMethod = "registerUser"
-            ),
-            @RouterOperation(
-                    path = "/api/v1/usuarios/document/{document}",
-                    method = RequestMethod.GET,
-                    beanClass = UserHandler.class,
-                    beanMethod = "getUserByDocument"
+                    path = "/api/v1/login",
+                    method = RequestMethod.POST,
+                    beanClass = AuthHandler.class,
+                    beanMethod = "loginUser"
             )
     })
-    public RouterFunction<ServerResponse> routerFunction(UserHandler handler, ErrorFilter errorFilter) {
-        return route(POST("/api/v1/usuarios"), handler::registerUser)
-                .andRoute(GET("/api/v1/usuarios/document/{document}"), handler::getUserByDocument)
+    public RouterFunction<ServerResponse> authRouterFunction(AuthHandler handler, ErrorFilter errorFilter) {
+        return route(POST("/api/v1/login"), handler::loginUser)
                 .filter(errorFilter);
     }
 }

@@ -1,8 +1,11 @@
 package co.com.pragma.bootcamp.auth.usecase.registrationuser;
 
+import co.com.pragma.bootcamp.auth.model.role.gateways.IRoleRepository;
+import co.com.pragma.bootcamp.auth.model.token.gateways.TokenRepository;
 import co.com.pragma.bootcamp.auth.model.user.User;
 import co.com.pragma.bootcamp.auth.model.user.gateways.IUserRepository;
 import co.com.pragma.bootcamp.auth.usecase.error.InvalidUserDataException;
+import co.com.pragma.bootcamp.auth.usecase.error.RoleNotFoundException;
 import co.com.pragma.bootcamp.auth.usecase.error.UserAlreadyExistsException;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
@@ -11,6 +14,8 @@ import reactor.core.publisher.Mono;
 public class RegistrationUserUseCase implements IRegistrationUserUseCase{
 
     private final IUserRepository userRepository;
+    private final IRoleRepository roleRepository;
+    private final TokenRepository tokenRepository;
 
     @Override
     public Mono<User> registerUser(User user) {
@@ -18,15 +23,19 @@ public class RegistrationUserUseCase implements IRegistrationUserUseCase{
         // Validate user fields
         validateUser(user);
 
-        return userRepository.existsByEmail(user.getEmail())
-                .flatMap(exists -> {
-                    if (exists) {
-                        return Mono.error(
-                                new UserAlreadyExistsException("User with email " + user.getEmail() + " already exists")
-                        );
-                    }
-                    return userRepository.save(user);
-                });
+        return roleRepository.getRoleByName(user.getRole().getName())
+                .switchIfEmpty(Mono.error(new RoleNotFoundException("Role not found: " + user.getRole().getName())))
+                .flatMap(role -> userRepository.existsByEmail(user.getEmail())
+                        .flatMap(exists -> {
+                            if (exists) {
+                                return Mono.error(
+                                        new UserAlreadyExistsException("User with email " + user.getEmail() + " already exists")
+                                );
+                            }
+                            user.setRole(role);
+                            user.setPassword(tokenRepository.encodePassword(user.getPassword()));
+                            return userRepository.save(user);
+                        }));
     }
 
     @Override
@@ -58,5 +67,11 @@ public class RegistrationUserUseCase implements IRegistrationUserUseCase{
         if (!user.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$"))
             throw new InvalidUserDataException("Invalid email format");
 
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
+            throw new InvalidUserDataException("Password cannot be empty");
+        }
+        if (user.getRole() == null) {
+            throw new InvalidUserDataException("Role cannot be null");
+        }
     }
 }

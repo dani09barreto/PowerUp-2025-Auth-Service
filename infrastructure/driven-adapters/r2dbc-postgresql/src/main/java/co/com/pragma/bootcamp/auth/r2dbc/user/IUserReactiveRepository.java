@@ -1,4 +1,4 @@
-package co.com.pragma.bootcamp.auth.r2dbc;
+package co.com.pragma.bootcamp.auth.r2dbc.user;
 
 import co.com.pragma.bootcamp.auth.r2dbc.entity.UserEntity;
 import org.springframework.data.r2dbc.repository.Query;
